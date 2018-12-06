@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="60"
+               packages="de.bwaldvogel.log4j,com.microsoft.applicationinsights.log4j.v2">
+    <Properties>
+        <Property name="GATEWAY_ID_P">deviceIdProperty</Property>
+    </Properties>
+    <Appenders>
+        <ApplicationInsightsAppender name="aiAppender"/>
+        <RollingFile name="Log" fileName="logs/logs.log"
+                     filePattern="logs/history/logs-%i.log">
+            <PatternLayout>
+                <Pattern>%d %p %logger{1.} [%t] %X{ThreadContext} ${sys:GATEWAY_ID_P} ${sys:GatewayIdSys}
+                    ${main:0} %m%n
+                </Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="3 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <logger name="com.microsoft.applicationinsights" level="warn"></logger>
+        <Root level="Debug" includeLocation="false">
+            <AppenderRef ref="Log" level="Debug"/>
+            <AppenderRef ref="aiAppender" level="Debug"/>
+        </Root>
+    </Loggers>
+</Configuration>
